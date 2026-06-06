@@ -7,7 +7,7 @@ This project had two goals:
 * Allow for headless "vibe" reverse engineering utilizing Hexrays' powerful disassembler and decompiler.
 
 This MCP server uses [FastMCP](https://fastmcp.wiki/en/v2/getting-started/welcome).
-I recommend reading about the (IDA Domain API)[https://ida-domain.docs.hex-rays.com/] so you can understand it's purpose and how it might fit into your projects.
+I recommend reading about the [IDA Domain API](https://ida-domain.docs.hex-rays.com/) so you can understand it's purpose and how it might fit into your projects.
 
 ## Features
 Currently none of the MCPs tools modify the database. 
