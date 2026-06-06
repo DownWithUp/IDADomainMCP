@@ -24,14 +24,13 @@ Actions supported:
 * Decompile to pseudocode
 
 ## Notes
-You **must** have the `IDADIR` environment variable is set. This is a requirement for the IDA domain API:
-Depending on how your AI agent is sandboxed, you may need to set the IDAUSR environment variable for the user. This is because the domain API will 
-try to write to `~/.idapro/ida.reg`. If your sandbox doesn't allow writing this will fail.
-In addition, you must ensure that the directory wit hthe .i64 database is readable and **writeable**. 
+* *You **must** have the `IDADIR` environment variable is set. This is a requirement for the IDA domain API:
+* Depending on how your AI agent is sandboxed, you may need to set the IDAUSR environment variable for the user. This is because the domain API will try to write to `~/.idapro/ida.reg`. If your sandbox doesn't allow writing this will fail.
+* In addition, you must ensure that the directory wit hthe .i64 database is readable and **writeable**. 
 
-You need to add an MCP server:
+You need to add an MCP server:<br>
 
-OpenAI codex:
+OpenAI codex:<br>
 Open the ~/.codex/config.toml
 ```
 [mcp_servers.ida_domain_mcp]
