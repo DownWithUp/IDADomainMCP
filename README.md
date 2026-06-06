@@ -24,7 +24,7 @@ Actions supported:
 * Decompile to pseudocode
 
 ## Notes
-* *You **must** have the `IDADIR` environment variable is set. This is a requirement for the IDA domain API:
+* You **must** have the `IDADIR` environment variable is set. This is a requirement for the IDA domain API.
 * Depending on how your AI agent is sandboxed, you may need to set the IDAUSR environment variable for the user. This is because the domain API will try to write to `~/.idapro/ida.reg`. If your sandbox doesn't allow writing this will fail.
 * In addition, you must ensure that the directory wit hthe .i64 database is readable and **writeable**. 
 
@@ -40,4 +40,7 @@ args = ["ida_domain_mcp.py"]
 [mcp_servers.dwu_ida_domain.env]
 IDADIR = "/home/mike/ida-pro-9.1"
 IDAUSR = "/tmp/idauser"
+```
+Claude:<br>
+```
 ```
