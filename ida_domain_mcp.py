@@ -212,7 +212,7 @@ def get_cross_references_from_address(effective_address: str) -> dict[str, Any]:
                 "from_ea": format_address(r.from_ea),
                 "to_ea": format_address(r.to_ea),
                 "is_code": r.is_code,
-                "type": r.type
+                "type": r.type.name
             }
         )
     return {"count": len(out), "xrefs": out}
@@ -248,7 +248,7 @@ def get_cross_references_to_address(effective_address: str) -> dict[str, Any]:
                 "from_ea": format_address(r.from_ea),
                 "to_ea": format_address(r.to_ea),
                 "is_code": r.is_code,
-                "type": r.type
+                "type": r.type.name
             }
         )
     return {"count": len(out), "xrefs": out}
