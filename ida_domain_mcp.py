@@ -266,7 +266,7 @@ def get_bytes_at(effective_address: str, count: int) -> bytes | None:
     return out
 
 @mcp.tool()
-def get_all_segments() -> list[str]:
+def get_all_segments() -> dict[str, Any]:
     """Returns the all the segments (sometimes misunderstood as sections) within the database/underlying binary.
 
     Use this tool when the caller wants to know about the overall binary structure or information about all, or some, of the 
