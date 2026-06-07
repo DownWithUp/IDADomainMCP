@@ -30,7 +30,7 @@ Actions supported:
 
 You need to add an MCP server:<br>
 
-OpenAI codex:<br>
+Example using OpenAI codex:<br>
 Open the ~/.codex/config.toml
 ```
 [mcp_servers.ida_domain_mcp]
@@ -40,7 +40,4 @@ args = ["ida_domain_mcp.py"]
 [mcp_servers.dwu_ida_domain.env]
 IDADIR = "/home/mike/ida-pro-9.1"
 IDAUSR = "/tmp/idauser"
-```
-Claude:<br>
-```
 ```
