@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Small MCP server for DWU IDA Domain helper tools."""
+"""A small and simple MCP server utilizing the IDA Domain API."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from mcp.server.fastmcp.exceptions import ToolError
 
 from dataclasses import asdict
 
-mcp = FastMCP("DWU IDA Domain MCP")
+mcp = FastMCP("IDA Domain MCP")
 
 working_db: Any | None = None
 
@@ -180,6 +180,71 @@ def get_disassembly_range(start_effective_address: str, end_effective_address: s
     for i in working_db.instructions.get_between(parse_address(start_effective_address), parse_address(end_effective_address)):
         out.append(working_db.instructions.get_disassembly(i))
     return {"count": len(out), "disassembly": out}
+
+@mcp.tool()
+def get_local_variables(effective_address: str) -> dict[str, Any]:
+    """Returns a dictionary of LocalVariable(s) that contain name, type, size, is_argument, and is_result members.
+
+    Use this tool when the caller wants to see the return value, the arguments, or information about the local variables of a function.
+    Provide the function's start effective address as input.
+    If the local value is an argument to the function "is_argument" is set to true.
+    If the local value is the return value or result then "is_result" is set to true.
+    """
+    if working_db is None:
+        raise ToolError("No database is currently open.")
+
+    out = []
+    for func in working_db.functions.get_all():
+        start_ea = func.start_ea
+        if start_ea == parse_address(effective_address):
+            for lv in working_db.functions.get_local_variables(func):
+                out.append({
+                    "index": lv.index,
+                    "name": lv.name,
+                    "type": lv.type,
+                    "size": lv.size,
+                    "is_argument": lv.is_argument,
+                    "is_result": lv.is_result
+                    })
+    return {"count": len(out), "locals": out}
+
+@mcp.tool()
+def get_all_types() -> dict[str, Any]:
+    """Returns all of the currently added types in the working database.
+
+    Use this tool when the caller wants to see if a type is present or see information about a type
+    that is is in the working database.
+    """
+    if working_db is None:
+        raise ToolError("No database is currently open.")
+
+    out = []
+    for t in working_db.types.get_all():
+        out.append({
+            "type_name": t.get_type_name(),
+            "size": t.get_size(),
+            "is_pointer": t.is_ptr()
+        })
+    return {"count": len(out), "types": out}
+
+@mcp.tool()
+def set_function_definition(function_effective_address: str, new_definition: str) -> bool:
+    """Sets the one or all of a function's name, return value, parameter types, and parameter names.
+
+    Use this tool when the caller wants to set the return value, the arguments, the function, name, or other details that
+    can be seen in a C function declaration/definition. When used to update function prototypes correctly, 
+    this improves the results of the decompiler. Returns True if the opperation succeeded, else returns False.
+    Example of a "new_definition" string:
+    "__int64 __fastcall sub_1400FFECC(DWORD abc, PUNICODE_STRING some_string)"
+    As seen in this example custom types and names to the arguments can be applied to the function sub_1400FFECC
+    """
+    if working_db is None:
+        raise ToolError("No database is currently open.")
+    
+    result = working_db.types.apply_declaration_at(parse_address(function_effective_address), 
+        new_definition, flags=working_db.types.TypeApplyFlags.DEFINITE)
+
+    return result
 
 @mcp.tool() 
 def get_cross_references_from_address(effective_address: str) -> dict[str, Any]:
