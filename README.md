@@ -1,7 +1,7 @@
 # IDA Domain MCP Server
 A lightweight MCP server which allows AI agents to preform reverse engineering tasks headlessly on IDA database files.
 
-
+https://github.com/user-attachments/assets/86a98360-86d5-482c-98d7-ab45783e32e3
 
 ## About
 This project had two goals:
