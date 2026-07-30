@@ -228,6 +228,30 @@ def get_all_types() -> dict[str, Any]:
     return {"count": len(out), "types": out}
 
 @mcp.tool()
+def add_c_type(c_type_string: str, type_name: str) -> bool:
+    """Creates a struct that will be added to the working database.
+
+    Use this tool when the caller wants to add a new C style type (incluing struct or enum) to the working database.
+    Returns True if successfully added. The "c_type_string" parameter must be a valid C struct/enum, for example:
+    typedef struct _abc
+    {
+    int a;
+    int b;
+    int c;
+    } abc;
+    THe "type_name" will be the name of the struct/enum type that will be usable in the working database, for example:
+    "ABC_STRUCT". If this function retuns True, this struct/enum can be applied to function definitions, for example:
+    __int64 __fastcall some_function(ABC_STRUCT* x)
+    using the "set_function_definition" tool.
+    """
+    if working_db is None:
+        raise ToolError("No database is currently open.")
+
+    new_type = working_db.types.parse_one_declaration(None, c_type_string, type_name)
+
+    return True
+
+@mcp.tool()
 def set_function_definition(function_effective_address: str, new_definition: str) -> bool:
     """Sets the one or all of a function's name, return value, parameter types, and parameter names.
 
@@ -242,7 +266,8 @@ def set_function_definition(function_effective_address: str, new_definition: str
         raise ToolError("No database is currently open.")
     
     result = working_db.types.apply_declaration_at(parse_address(function_effective_address), 
-        new_definition, flags=working_db.types.TypeApplyFlags.DEFINITE)
+        new_definition, flags=1)
+    # 1 = ida_domain.types.TypeApplyFlags.DEFINITE
 
     return result
 
