@@ -24,6 +24,7 @@ Actions supported:
 * Decompile to pseudocode
 * List all types in the database
 * List locals in a function
+* Add local types to the database via `add_c_type`
 * Set the function definition (change return value and argument types and names)
 
 ## Notes
