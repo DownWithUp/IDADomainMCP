@@ -28,7 +28,7 @@ def get_database_class() -> Any:
 
 
 @mcp.tool()
-def open_database(database_path: str) -> bool:
+async def open_database(database_path: str) -> bool:
     """Open an IDA database with the IDA domain API.
 
     Use this when the caller asks or needs to start working on a new IDA database. 
@@ -44,7 +44,7 @@ def open_database(database_path: str) -> bool:
 
 
 @mcp.tool()
-def close_database(save_changes: bool = True) -> bool:
+async def close_database(save_changes: bool = True) -> bool:
     """Closes the current working database.
     
     Use this tool when the caller wants to open a new database and a current working database is already open.
@@ -81,7 +81,7 @@ def parse_address(value: int | str | None) -> int | None:
 
 
 @mcp.tool()
-def list_functions(include_details: bool = False) -> dict[str, Any]:
+async def list_functions(include_details: bool = False) -> dict[str, Any]:
     """Lists all the functions in the working database.
 
     Use this tool when the caller wants list all the functions within the working database.
@@ -110,7 +110,7 @@ def list_functions(include_details: bool = False) -> dict[str, Any]:
 
 
 @mcp.tool()
-def decompile_function(
+async def decompile_function(
     function_name: str | None = None,
     function_start_ea: str | None = None,
 ) -> list[str]:
@@ -155,7 +155,7 @@ def decompile_function(
     return [str(line) for line in pseudocode.to_text()]
 
 @mcp.tool()
-def get_disassembly(effective_address: str) -> str:
+async def get_disassembly(effective_address: str) -> str:
     """Returns a single instruction at the effective address.
 
     Use this tool when the caller wants to disassembly or view the underlying assembly instruction
@@ -167,7 +167,7 @@ def get_disassembly(effective_address: str) -> str:
     return working_db.instructions.get_disassembly(working_db.instructions.get_at(parse_address(effective_address)))
 
 @mcp.tool()
-def get_disassembly_range(start_effective_address: str, end_effective_address: str) -> dict[str, Any]:
+async def get_disassembly_range(start_effective_address: str, end_effective_address: str) -> dict[str, Any]:
     """Returns the instructions starting at the effective address and ending at the ending effective address.
 
     Use this tool when the caller wants to disassembly or view a range of underlying assembly instructions
@@ -182,7 +182,7 @@ def get_disassembly_range(start_effective_address: str, end_effective_address: s
     return {"count": len(out), "disassembly": out}
 
 @mcp.tool()
-def get_local_variables(effective_address: str) -> dict[str, Any]:
+async def get_local_variables(effective_address: str) -> dict[str, Any]:
     """Returns a dictionary of LocalVariable(s) that contain name, type, size, is_argument, and is_result members.
 
     Use this tool when the caller wants to see the return value, the arguments, or information about the local variables of a function.
@@ -209,7 +209,7 @@ def get_local_variables(effective_address: str) -> dict[str, Any]:
     return {"count": len(out), "locals": out}
 
 @mcp.tool()
-def get_all_types() -> dict[str, Any]:
+async def get_all_types() -> dict[str, Any]:
     """Returns all of the currently added types in the working database.
 
     Use this tool when the caller wants to see if a type is present or see information about a type
@@ -228,7 +228,7 @@ def get_all_types() -> dict[str, Any]:
     return {"count": len(out), "types": out}
 
 @mcp.tool()
-def add_c_type(c_type_string: str, type_name: str) -> bool:
+async def add_c_type(c_type_string: str, type_name: str) -> bool:
     """Creates a struct that will be added to the working database.
 
     Use this tool when the caller wants to add a new C style type (incluing struct or enum) to the working database.
@@ -252,7 +252,7 @@ def add_c_type(c_type_string: str, type_name: str) -> bool:
     return True
 
 @mcp.tool()
-def set_function_definition(function_effective_address: str, new_definition: str) -> bool:
+async def set_function_definition(function_effective_address: str, new_definition: str) -> bool:
     """Sets the one or all of a function's name, return value, parameter types, and parameter names.
 
     Use this tool when the caller wants to set the return value, the arguments, the function, name, or other details that
@@ -272,7 +272,7 @@ def set_function_definition(function_effective_address: str, new_definition: str
     return result
 
 @mcp.tool() 
-def get_cross_references_from_address(effective_address: str) -> dict[str, Any]:
+async def get_cross_references_from_address(effective_address: str) -> dict[str, Any]:
     """Returns all cross references (xrefs) from the the effective address.
 
     Use this tool when the caller wants to find all the related cross references (xrefs) that 
@@ -308,7 +308,7 @@ def get_cross_references_from_address(effective_address: str) -> dict[str, Any]:
     return {"count": len(out), "xrefs": out}
 
 @mcp.tool() 
-def get_cross_references_to_address(effective_address: str) -> dict[str, Any]:
+async def get_cross_references_to_address(effective_address: str) -> dict[str, Any]:
     """Returns all cross references (xrefs) to the the effective address.
 
     Use this tool when the caller wants to find all the related cross references (xrefs) that 
@@ -344,7 +344,7 @@ def get_cross_references_to_address(effective_address: str) -> dict[str, Any]:
     return {"count": len(out), "xrefs": out}
 
 @mcp.tool()
-def get_bytes_at(effective_address: str, count: int) -> bytes | None:
+async def get_bytes_at(effective_address: str, count: int) -> bytes | None:
     """Returns the bytes found at the effective address. The number of bytes returned is based on the count argument.
 
     Use this tool when the caller wants to get the raw bytes at an address.
@@ -356,7 +356,7 @@ def get_bytes_at(effective_address: str, count: int) -> bytes | None:
     return out
 
 @mcp.tool()
-def get_all_segments() -> dict[str, Any]:
+async def get_all_segments() -> dict[str, Any]:
     """Returns the all the segments (sometimes misunderstood as sections) within the database/underlying binary.
 
     Use this tool when the caller wants to know about the overall binary structure or information about all, or some, of the 
@@ -380,7 +380,7 @@ def get_all_segments() -> dict[str, Any]:
     return {"count": len(details), "segments": details}
     
 @mcp.tool()
-def get_all_strings(decode_utf8: bool=True) -> dict[str, Any]:
+async def get_all_strings(decode_utf8: bool=True) -> dict[str, Any]:
     """Returns all the strings and their addresses found in the database/underlying binary. 
 
     Use this tool when the caller wants to know about any C strings within the database/binary. This tool always rebuilds the strings table 
@@ -400,7 +400,7 @@ def get_all_strings(decode_utf8: bool=True) -> dict[str, Any]:
 
 
 @mcp.tool()
-def get_database_info() -> dict:
+async def get_database_info() -> dict:
     """Returns information about the database and the underlying binary the database was originally created from.
 
     Use this tool when the caller wants information about the database or the original binary file.
