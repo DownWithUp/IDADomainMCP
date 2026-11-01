@@ -5,12 +5,12 @@ from __future__ import annotations
 
 from typing import Any
 
-from mcp.server.fastmcp import FastMCP
-from mcp.server.fastmcp.exceptions import ToolError
+from mcp.server.mcpserver import MCPServer
+from mcp.server.mcpserver.exceptions import ToolError
 
 from dataclasses import asdict
 
-mcp = FastMCP("IDA Domain MCP")
+mcp = MCPServer("IDA Domain MCP")
 
 working_db: Any | None = None
 
